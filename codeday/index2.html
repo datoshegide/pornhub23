@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Hub Clone UI</title>
+  <style>
+    * {
+  scrollbar-width: thin; /* or auto */
+  scrollbar-color: orange #1a1a1a; /* thumb color and track color */
+    }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: #111;
+      color: #fff;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: #0f0f0f;
+      padding: 12px 40px;
+      flex-wrap: wrap;
+      height: 60px;
+    }
+
+    .left {
+      display: flex;
+      align-items: center;
+      gap: 30px;
+    }
+
+    .menu-icon {
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .logo {
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .porn {
+      color: white;
+    }
+
+    .hub {
+      background-color: orange;
+      color: black;
+      padding: 2px 6px;
+      border-radius: 4px;
+      margin-left: 2px;
+    }
+
+    .nav-links a {
+      margin: 0 10px;
+      text-decoration: none;
+      color: #ccc;
+      font-size: 15px;
+      font-weight: bold;
+      transition: all 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      border-bottom: 2px solid orange;
+    }
+
+    .right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .search {
+      padding: 10px 16px;
+      border: none;
+      border-radius: 20px;
+      background: #222;
+      color: white;
+      width: 250px;
+      font-size: 14px;
+    }
+
+    .ai-btn {
+      background-color: orange;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    #photoUploadLabel {
+      cursor: pointer;
+      padding: 8px 16px;
+      background-color: orange;
+      color: black;
+      border-radius: 20px;
+      font-weight: bold;
+      font-size: 14px;
+      margin-left: 12px;
+    }
+
+    .icons {
+      font-size: 20px;
+      color: #ccc;
+    }
+
+    .notifications {
+      position: relative;
+      font-size: 20px;
+    }
+
+    .badge {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      background: red;
+      color: white;
+      font-size: 10px;
+      padding: 2px 6px;
+      border-radius: 50%;
+    }
+
+    .profile {
+      font-size: 22px;
+      color: #ccc;
+    }
+
+    /* --- PHOTO GRID --- */
+    .photo-gallery {
+      padding: 0;
+      margin: 0;
+      background-color: #111;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      grid-auto-rows: auto;
+      gap: 24px;
+      padding: 24px;
+    }
+
+    .photo-item {
+      background-color: #222;
+      border-radius: 0px;
+      overflow: hidden;
+      transition: transform 0.3s ease;
+      cursor: pointer;
+      box-shadow: 0 4px 10px rgba(255, 165, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .photo-item:hover {
+      transform: scale(1.03);
+    }
+
+    .photo-item img {
+      width: 100%;
+      aspect-ratio: 16 /9;
+      object-fit: cover;
+      display: block;
+    }
+
+    .caption {
+      padding: 10px;
+      font-size: 15px;
+      color: #ccc;
+      font-weight: bold;
+      line-height: 1.2;
+      background-color: #181818;
+    }
+
+
+.age-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.95);
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.age-modal-content {
+  background-color: #1a1a1a;
+  padding: 40px;
+  border-radius: 12px;
+  text-align: center;
+  max-width: 90%;
+  color: white;
+  box-shadow: 0 0 20px orange;
+  animation: pop-in 0.4s ease;
+}
+
+.age-modal-content h2 {
+  margin-bottom: 10px;
+  font-size: 28px;
+}
+
+.age-modal-content p {
+  margin-bottom: 20px;
+  font-size: 16px;
+  color: #ccc;
+}
+
+.age-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+}
+
+.age-buttons button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
+  background-color: orange;
+  font-weight: bold;
+  font-size: 16px;
+  color: black;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.age-buttons button:hover {
+  background-color: #ffb347;
+}
+
+
+@keyframes pop-in {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+  </style>
+</head>
+<body>
+<!-- AGE VERIFICATION MODAL -->
+<div class="age-modal" id="ageModal">
+  <div class="age-modal-content">
+    <h2>Are you 18 or older?</h2>
+    <p>You must be 18+ to enter this site.</p>
+    <div class="age-buttons">
+      <button id="ageYes">Yes, I am</button>
+      <a href="https://images.search.yahoo.com/search/images;_ylt=AwrEohNddGZoNQIAScdXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BpdnM-?p=cats&fr2=piv-web&type=E210US91215G0&fr=mcafee">
+      <button id="ageNo">No, I'm not</button>
+      </a>
+    </div>
+  </div>
+</div>
+
+
+  <!-- NAVBAR -->
+  <header class="navbar">
+    <div class="left">
+      <div class="menu-icon">☰</div>
+      <div class="logo"><span class="porn">porn</span><span class="hub">hub</span></div>
+      <nav class="nav-links">
+        <a href="#">HOME</a>
+        <a href="#">VIDEOS ▾</a>
+        <a href="#">CATEGORIES ▾</a>
+        <a href="#">LIVE CAMS ▾</a>
+        <a href="#">PORNSTARS ▾</a>
+        <a href="#">COMMUNITY ▾</a>
+        <a href="#">PHOTOS & GIFS ▾</a>
+      </nav>
+    </div>
+
+    <div class="right">
+      <input type="text" class="search" placeholder="Search..." />
+      <button class="ai-btn">AI 🔥</button>
+      <label for="photoUpload" id="photoUploadLabel">Upload Photo 📷</label>
+      <input type="file" id="photoUpload" accept="image/*" style="display:none" />
+      <div class="icons">📹 🖼️</div>
+      <div class="notifications">🔔<span class="badge">5</span></div>
+      <div class="profile">👤</div>
+    </div>
+  </header>
+
+  <!-- PHOTO GALLERY -->
+  <section class="photo-gallery">
+    <div class="photo-grid">
+      <div class="photo-item">
+<a href="">    
+        <img src="image.png" alt="Photo 1" /></a>
+        <div class="caption">Hot Guy</div>
+      </div>
+      <div class="photo-item">
+<a href="">
+        <img src="image.png" alt="Photo 2" /></a>
+        <div class="caption">Crazy Pool porn</div>
+      </div>
+      <div class="photo-item">
+<a href="">
+        <img src="image.png" alt="Photo 3" /></a>
+        <div class="caption">backstage fuckin</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=666e09813912b">
+        <img src="photo4.png" alt="Photo 4" /></a>
+        <div class="caption">Wild night at diddys</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=68370c5a740af">
+        <img src="photo5.png" alt="Photo 5" /></a>
+        <div class="caption">1v1 with gorrila</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=6737421279294f">
+          <img src="photo6.png" alt="Photo 6" /></a>
+        <div class="caption">Roommate Surprise</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=65b10a31322dc">
+        <img src="photo7.png" alt="Photo 7" /></a>
+        <div class="caption">gay marlon</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=684af1d526c73">
+        <img src="photo8.png" alt="Photo 8" />
+        <div class="caption">gay Workout</div></a>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=680779918070b">
+        <img src="photo9.png" alt="Photo 9" />
+        <div class="caption">sweaty Workout</div></a>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=6567dd993e800">
+        <img src="photo10.png" alt="Photo 10" /></a>
+        <div class="caption">Caught on Camera</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=66c491cc5e0d0">
+        <img src="photo11.png" alt="Photo 11" /></a>
+        <div class="caption">naked yoga with lacy</div>
+      </div>
+      <div class="photo-item">
+<a href="https://www.pornhub.com/view_video.php?viewkey=67a32072e634a">
+        <img src="photo12.png" alt="Photo12"></a>
+        <div class="caption">random gey sex</div>        
+      </div>
+         <div class="photo-item">
+<a href="">
+        <img src="photo13.png" alt="Photo13"></a>
+        <div class="caption">random gey sex</div>        
+      </div>
+         <div class="photo-item">
+<a href="">
+        <img src="photo14.png" alt="Photo14"></a>
+        <div class="caption">random gey sex</div>
+      </div>
+
+        <div class="photo-item">
+  <a href="">
+        <img src="photo15.png" alt="Photo15"></a>
+        <div class="caption">random gey sex</div>
+      </div>
+
+        <div class="photo-item">
+<a href="">
+        <img src="photo16.png" alt="Photo16"></a>
+        <div class="caption">random gey sex</div>
+      </div>
+    </div>
+  </section>
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  // ... (your existing age verification script here) ...
+
+  const menuButton = document.getElementById("menuButton");
+  const navLinks = document.querySelector(".nav-links"); // Assuming your navigation links are within a div with class 'nav-links'
+
+  if (menuButton && navLinks) {
+    menuButton.addEventListener("click", function() {
+      navLinks.classList.toggle("active"); // Toggles the 'active' class
+      menuButton.classList.toggle("open"); // Optional: for animating the hamburger icon
+    });
+  }
+});
+
+
+
+console.log("Welcome to the Hub Clone UI! ${ userAge}");
+
+
+
+
+
+    document.getElementById("ageYes").addEventListener("click", function () {
+  document.getElementById("ageModal").style.display = "none";
+});
+
+document.getElementById("ageNo").addEventListener("click", function () {
+  window.location.href = "html.html"; // Or your landing page
+});
+
+  </script>
+</body>
+</html>
